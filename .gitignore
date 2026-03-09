@@ -50,6 +50,7 @@ coverage.xml
 .hypothesis/
 .pytest_cache/
 cover/
+tests/__pycache__/
 
 # Translations
 *.mo
@@ -208,3 +209,5 @@ __marimo__/
 
 
 *.db
+# SQLite database file for this project
+event_management.db

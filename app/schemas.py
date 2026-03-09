@@ -40,6 +40,21 @@ class EventUpdate(BaseModel):
     end_time: Optional[datetime] = None
     max_capacity: Optional[int] = None
 
+    @field_validator("max_capacity")
+    @classmethod
+    def capacity_must_be_positive(cls, v):
+        if v is not None and v <= 0:
+            raise ValueError("max_capacity must be greater than 0")
+        return v
+
+    @field_validator("end_time")
+    @classmethod
+    def end_time_must_be_after_start(cls, v, info):
+        if v is not None and "start_time" in info.data and info.data["start_time"]:
+            if v <= info.data["start_time"]:
+                raise ValueError("end_time must be after start_time")
+        return v
+
 
 class EventResponse(EventBase):
     id: int
@@ -53,7 +68,14 @@ class EventResponse(EventBase):
 
 class ParticipantBase(BaseModel):
     name: str
-    email: str
+    email: EmailStr
+
+    @field_validator("name")
+    @classmethod
+    def name_must_not_be_empty(cls, v):
+        if not v or not v.strip():
+            raise ValueError("name cannot be empty")
+        return v
 
 
 class ParticipantCreate(ParticipantBase):

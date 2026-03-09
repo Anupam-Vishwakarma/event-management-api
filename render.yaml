@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: event-management-api
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn -w 4 -k uvicorn.workers.UvicornWorker app.main:app
+    envVars:
+      - key: DATABASE_URL
+        value: sqlite:///./event_management.db
+      - key: PYTHON_VERSION
+        value: 3.11.0
